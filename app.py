@@ -4,6 +4,7 @@ import random
 import pandas as pd
 from sentence_transformers import SentenceTransformer, util
 from rag_utils import retrieve_answer
+from mock_interviewer import generate_followup
 
 st.set_page_config(page_title="AI Interview Assistant", page_icon="🤖", layout="wide")
 
@@ -134,18 +135,22 @@ if "current_question" not in st.session_state:
     st.session_state.topic = topic_data["topic"]
     st.session_state.current_question = q["question"]
     st.session_state.correct_answer = q["answer"]
-    
+
 # --------------------------------------------------
 # Display Question
 # --------------------------------------------------
 
 with st.container():
 
-    st.subheader(f"Topic: {st.session_state.topic}")
+    st.markdown('<div class="chat-card">', unsafe_allow_html=True)
+
+    st.subheader(f"📚 Topic: {st.session_state.topic}")
 
     st.markdown("### Interview Question")
 
     st.write(st.session_state.current_question)
+
+    st.markdown('</div>', unsafe_allow_html=True)
 
 # --------------------------------------------------
 # Chat Input
@@ -191,6 +196,27 @@ Expected Answer:
 """
 
     st.session_state.messages.append(("assistant", bot_message))
+
+    # --------------------------------------------------
+    # AI Mock Interviewer Follow-up Question
+    # --------------------------------------------------
+
+    try:
+
+        followup = generate_followup(
+            st.session_state.current_question,
+            user_answer
+        )
+
+        st.session_state.messages.append(
+            ("assistant", f"🤖 Follow-up Question:\n\n{followup}")
+        )
+
+    except Exception:
+
+        st.session_state.messages.append(
+            ("assistant", "⚠️ Unable to generate follow-up question.")
+        )
 
 # --------------------------------------------------
 # Chat History
