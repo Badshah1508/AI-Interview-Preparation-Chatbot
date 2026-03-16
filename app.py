@@ -1,7 +1,9 @@
 import streamlit as st
 import json
 import random
+import pandas as pd
 from sentence_transformers import SentenceTransformer, util
+from rag_utils import retrieve_answer
 
 st.set_page_config(page_title="AI Interview Assistant", page_icon="🤖", layout="wide")
 
@@ -46,7 +48,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-st.title("AI Interview Preparation Assistant")
+st.title("🤖 AI Interview Preparation Assistant")
 
 # --------------------------------------------------
 # Load Model
@@ -85,11 +87,27 @@ selected_topic = st.sidebar.selectbox(
 )
 
 # --------------------------------------------------
-# Topic Change Detection
+# Session State Initialization
 # --------------------------------------------------
+
+if "messages" not in st.session_state:
+    st.session_state.messages = []
+
+if "score" not in st.session_state:
+    st.session_state.score = 0
+
+if "total" not in st.session_state:
+    st.session_state.total = 0
+
+if "topic_stats" not in st.session_state:
+    st.session_state.topic_stats = {}
 
 if "last_topic" not in st.session_state:
     st.session_state.last_topic = selected_topic
+
+# --------------------------------------------------
+# Topic Change Detection
+# --------------------------------------------------
 
 if st.session_state.last_topic != selected_topic:
 
@@ -105,17 +123,8 @@ if st.session_state.last_topic != selected_topic:
     st.session_state.last_topic = selected_topic
 
 # --------------------------------------------------
-# Session State Initialization
+# Initialize Question
 # --------------------------------------------------
-
-if "messages" not in st.session_state:
-    st.session_state.messages = []
-
-if "score" not in st.session_state:
-    st.session_state.score = 0
-
-if "total" not in st.session_state:
-    st.session_state.total = 0
 
 if "current_question" not in st.session_state:
 
@@ -125,7 +134,7 @@ if "current_question" not in st.session_state:
     st.session_state.topic = topic_data["topic"]
     st.session_state.current_question = q["question"]
     st.session_state.correct_answer = q["answer"]
-
+    
 # --------------------------------------------------
 # Display Question
 # --------------------------------------------------
@@ -148,22 +157,29 @@ if user_answer:
 
     st.session_state.messages.append(("user", user_answer))
 
-    expected = st.session_state.correct_answer
+    expected = retrieve_answer(model, user_answer)
 
     emb1 = model.encode(user_answer, convert_to_tensor=True)
     emb2 = model.encode(expected, convert_to_tensor=True)
 
     similarity = util.cos_sim(emb1, emb2).item()
 
+    topic = st.session_state.topic
+
+    if topic not in st.session_state.topic_stats:
+        st.session_state.topic_stats[topic] = {"correct":0,"total":0}
+
+    st.session_state.topic_stats[topic]["total"] += 1
     st.session_state.total += 1
 
     if similarity > 0.7:
-        feedback = "Excellent answer!"
+        feedback = "✅ Excellent answer!"
         st.session_state.score += 1
+        st.session_state.topic_stats[topic]["correct"] += 1
     elif similarity > 0.5:
-        feedback = "Partially correct."
+        feedback = "⚠️ Partially correct."
     else:
-        feedback = "Incorrect answer."
+        feedback = "❌ Incorrect answer."
 
     bot_message = f"""
 {feedback}
@@ -185,10 +201,10 @@ for role, msg in st.session_state.messages:
         st.write(msg)
 
 # --------------------------------------------------
-# Next Question Button
+# Next Question
 # --------------------------------------------------
 
-if st.button("Next Question", key="next_question_button"):
+if st.button("Next Question"):
 
     st.session_state.messages = []
 
@@ -202,16 +218,78 @@ if st.button("Next Question", key="next_question_button"):
     st.rerun()
 
 # --------------------------------------------------
-# Scoreboard
+# Interview Analytics
 # --------------------------------------------------
 
-accuracy = 0
+st.sidebar.header("📊 Interview Analytics")
 
+accuracy = 0
 if st.session_state.total > 0:
     accuracy = (st.session_state.score / st.session_state.total) * 100
-
-st.sidebar.header("Interview Score")
 
 st.sidebar.metric("Correct Answers", st.session_state.score)
 st.sidebar.metric("Total Questions", st.session_state.total)
 st.sidebar.metric("Accuracy", f"{round(accuracy,1)}%")
+
+# --------------------------------------------------
+# Topic Performance Chart
+# --------------------------------------------------
+
+if st.session_state.topic_stats:
+
+    chart_data = []
+
+    for topic,stats in st.session_state.topic_stats.items():
+
+        acc = (stats["correct"]/stats["total"])*100
+
+        chart_data.append({
+            "Topic":topic,
+            "Accuracy":acc
+        })
+
+    df = pd.DataFrame(chart_data)
+
+    st.sidebar.subheader("Topic Performance")
+
+    st.sidebar.bar_chart(df.set_index("Topic"))
+
+# --------------------------------------------------
+# Weak Areas
+# --------------------------------------------------
+
+weak_topics = []
+
+for topic,stats in st.session_state.topic_stats.items():
+
+    acc = stats["correct"]/stats["total"]
+
+    if acc < 0.5:
+        weak_topics.append(topic)
+
+if weak_topics:
+
+    st.sidebar.subheader("⚠️ Weak Areas")
+
+    for t in weak_topics:
+        st.sidebar.write(t)
+
+# --------------------------------------------------
+# Strength Areas
+# --------------------------------------------------
+
+strong_topics = []
+
+for topic,stats in st.session_state.topic_stats.items():
+
+    acc = stats["correct"]/stats["total"]
+
+    if acc > 0.8:
+        strong_topics.append(topic)
+
+if strong_topics:
+
+    st.sidebar.subheader("✅ Strengths")
+
+    for t in strong_topics:
+        st.sidebar.write(t)
