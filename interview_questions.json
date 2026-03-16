@@ -1,23 +1,117 @@
 {
- "questions": [
+ "topics": [
   {
-   "question": "What is machine learning?",
-   "answer": "Machine learning is a field of AI that allows systems to learn patterns from data and improve automatically without being explicitly programmed."
+   "topic": "Machine Learning",
+   "questions": [
+    {
+     "question": "What is machine learning?",
+     "answer": "Machine learning is a branch of artificial intelligence that allows systems to learn patterns from data and improve performance without being explicitly programmed.",
+     "difficulty": "easy",
+     "keywords": ["learning", "data", "patterns", "ai"]
+    },
+    {
+     "question": "What is supervised learning?",
+     "answer": "Supervised learning is a machine learning approach where models are trained using labeled datasets to predict outputs from inputs.",
+     "difficulty": "easy",
+     "keywords": ["labeled data", "training", "prediction"]
+    },
+    {
+     "question": "What is overfitting?",
+     "answer": "Overfitting occurs when a machine learning model learns the training data including noise and fails to generalize to unseen data.",
+     "difficulty": "medium",
+     "keywords": ["training data", "noise", "generalization"]
+    },
+    {
+     "question": "What is underfitting?",
+     "answer": "Underfitting occurs when a model is too simple to capture patterns in the data, leading to poor performance on both training and test data.",
+     "difficulty": "medium",
+     "keywords": ["model", "patterns", "simple"]
+    }
+   ]
   },
 
   {
-   "question": "What is supervised learning?",
-   "answer": "Supervised learning is a machine learning approach where models are trained using labeled datasets."
+   "topic": "Python",
+   "questions": [
+    {
+     "question": "What is Python?",
+     "answer": "Python is a high-level, interpreted programming language known for its readability and extensive libraries.",
+     "difficulty": "easy",
+     "keywords": ["interpreted", "programming", "language"]
+    },
+    {
+     "question": "What are Python lists?",
+     "answer": "Lists are ordered, mutable collections that can store multiple elements of different data types.",
+     "difficulty": "easy",
+     "keywords": ["mutable", "ordered", "collection"]
+    },
+    {
+     "question": "What is a dictionary in Python?",
+     "answer": "A dictionary is a collection of key-value pairs where each key maps to a value.",
+     "difficulty": "easy",
+     "keywords": ["key", "value", "mapping"]
+    }
+   ]
   },
 
   {
-   "question": "What is overfitting?",
-   "answer": "Overfitting occurs when a model learns training data too well including noise and fails to generalize to new data."
+   "topic": "Data Structures",
+   "questions": [
+    {
+     "question": "What is a stack?",
+     "answer": "A stack is a linear data structure that follows the Last In First Out principle.",
+     "difficulty": "easy",
+     "keywords": ["LIFO", "push", "pop"]
+    },
+    {
+     "question": "What is a queue?",
+     "answer": "A queue is a linear data structure that follows the First In First Out principle.",
+     "difficulty": "easy",
+     "keywords": ["FIFO", "enqueue", "dequeue"]
+    },
+    {
+     "question": "What is a binary tree?",
+     "answer": "A binary tree is a hierarchical data structure in which each node has at most two children.",
+     "difficulty": "medium",
+     "keywords": ["tree", "node", "children"]
+    }
+   ]
   },
 
   {
-   "question": "What is underfitting?",
-   "answer": "Underfitting occurs when a model is too simple to capture patterns in the data."
+   "topic": "DBMS",
+   "questions": [
+    {
+     "question": "What is DBMS?",
+     "answer": "A Database Management System is software that allows users to store, manage, and retrieve data efficiently.",
+     "difficulty": "easy",
+     "keywords": ["database", "data management"]
+    },
+    {
+     "question": "What is normalization?",
+     "answer": "Normalization is the process of organizing data in a database to reduce redundancy and improve data integrity.",
+     "difficulty": "medium",
+     "keywords": ["redundancy", "tables", "integrity"]
+    }
+   ]
+  },
+
+  {
+   "topic": "Operating System",
+   "questions": [
+    {
+     "question": "What is an operating system?",
+     "answer": "An operating system is system software that manages hardware resources and provides services for computer programs.",
+     "difficulty": "easy",
+     "keywords": ["hardware", "software", "resource management"]
+    },
+    {
+     "question": "What is a process?",
+     "answer": "A process is a program that is currently being executed by the CPU.",
+     "difficulty": "easy",
+     "keywords": ["execution", "program", "cpu"]
+    }
+   ]
   }
  ]
 }

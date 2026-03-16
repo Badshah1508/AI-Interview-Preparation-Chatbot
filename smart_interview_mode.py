@@ -5,7 +5,7 @@ from sentence_transformers import SentenceTransformer, util
 # load embedding model
 model = SentenceTransformer('all-MiniLM-L6-v2')
 
-# load questions
+# load dataset
 with open("interview_questions.json") as file:
     data = json.load(file)
 
@@ -14,9 +14,14 @@ print("Type 'exit' to stop\n")
 
 while True:
 
-    q = random.choice(data["questions"])
+    # choose random topic
+    topic = random.choice(data["topics"])
 
-    print("\nBot:", q["question"])
+    # choose random question from that topic
+    q = random.choice(topic["questions"])
+
+    print("\nTopic:", topic["topic"])
+    print("Bot:", q["question"])
 
     user_answer = input("Your answer: ")
 
@@ -25,21 +30,18 @@ while True:
 
     expected_answer = q["answer"]
 
-    # create embeddings
+    # embeddings
     emb1 = model.encode(user_answer, convert_to_tensor=True)
     emb2 = model.encode(expected_answer, convert_to_tensor=True)
 
-    # compute similarity
-    score = util.cos_sim(emb1, emb2)
+    score = util.cos_sim(emb1, emb2).item()
 
-    similarity = score.item()
+    print("\nSimilarity Score:", round(score,2))
 
-    print("\nSimilarity Score:", round(similarity,2))
-
-    if similarity > 0.65:
+    if score > 0.65:
         print("Good answer!")
-    elif similarity > 0.4:
-        print("Partially correct answer.")
+    elif score > 0.4:
+        print("Partially correct.")
     else:
         print("Incorrect answer.")
 
