@@ -1,0 +1,23 @@
+{
+ "questions": [
+  {
+   "question": "What is machine learning?",
+   "answer": "Machine learning is a field of AI that allows systems to learn patterns from data and improve automatically without being explicitly programmed."
+  },
+
+  {
+   "question": "What is supervised learning?",
+   "answer": "Supervised learning is a machine learning approach where models are trained using labeled datasets."
+  },
+
+  {
+   "question": "What is overfitting?",
+   "answer": "Overfitting occurs when a model learns training data too well including noise and fails to generalize to new data."
+  },
+
+  {
+   "question": "What is underfitting?",
+   "answer": "Underfitting occurs when a model is too simple to capture patterns in the data."
+  }
+ ]
+}
