@@ -26,9 +26,9 @@ Only return the question.
 
 
 # ---------- TEST CODE ----------
-question = "What is Machine Learning?"
-answer = "Machine learning allows computers to learn patterns from data."
+# question = "What is Machine Learning?"
+# answer = "Machine learning allows computers to learn patterns from data."
 
-followup = generate_followup(question, answer)
+# followup = generate_followup(question, answer)
 
-print("Follow-up question:", followup)
+# print("Follow-up question:", followup)
