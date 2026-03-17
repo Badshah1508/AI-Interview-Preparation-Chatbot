@@ -16,7 +16,7 @@ Only return the question.
 """
 
     response = ollama.chat(
-        model="llama3",
+        model="phi3",
         messages=[
             {"role": "user", "content": prompt}
         ]
@@ -25,10 +25,10 @@ Only return the question.
     return response["message"]["content"]
 
 
-# ---------- TEST CODE ----------
-# question = "What is Machine Learning?"
-# answer = "Machine learning allows computers to learn patterns from data."
+# Test example
+question = "What is Machine Learning?"
+answer = "Machine learning allows computers to learn patterns from data."
 
-# followup = generate_followup(question, answer)
+followup = generate_followup(question, answer)
 
-# print("Follow-up question:", followup)
+print("Follow-up question:", followup)
